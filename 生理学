@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生理学学习工作台 | 医学影像学</title>
+<style>
+:root{
+  --primary:#0e7490;--primary-dark:#155e75;--primary-light:#cffafe;
+  --accent:#0891b2;--bg:#f0f9ff;--card:#ffffff;--text:#0f172a;
+  --text-light:#64748b;--border:#e2e8f0;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 25px rgba(0,0,0,.1);
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--primary);text-decoration:none}
+
+/* ===== 布局 ===== */
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:linear-gradient(180deg,#0c4a6e 0%,#0e7490 100%);color:#fff;padding:24px 0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:0 24px 20px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:16px}
+.sidebar-header h1{font-size:18px;font-weight:700;letter-spacing:.5px}
+.sidebar-header p{font-size:12px;opacity:.7;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 24px;cursor:pointer;transition:all .2s;font-size:14px;border-left:3px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.1)}
+.nav-item.active{background:rgba(255,255,255,.15);border-left-color:#67e8f9;font-weight:600}
+.nav-item svg{width:20px;height:20px;flex-shrink:0}
+.nav-section{padding:12px 24px 6px;font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.5;margin-top:8px}
+
+.main{flex:1;margin-left:260px;padding:28px 32px;max-width:100%}
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-header h2{font-size:24px;font-weight:700;color:var(--primary-dark)}
+.page-header .date{font-size:14px;color:var(--text-light)}
+
+/* ===== 卡片 ===== */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:20px}
+.card-title{font-size:16px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--primary-dark)}
+.card-title svg{width:18px;height:18px}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+/* ===== 统计卡片 ===== */
+.stat-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--primary)}
+.stat-card .label{font-size:13px;color:var(--text-light);margin-bottom:6px}
+.stat-card .value{font-size:28px;font-weight:700;color:var(--primary-dark)}
+.stat-card .sub{font-size:12px;color:var(--text-light);margin-top:4px}
+.stat-card.green{border-left-color:var(--success)}
+.stat-card.orange{border-left-color:var(--warning)}
+.stat-card.cyan{border-left-color:var(--accent)}
+
+/* ===== 章节列表 ===== */
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.chapter-card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;border:2px solid transparent}
+.chapter-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--primary-light)}
+.chapter-card .ch-num{display:inline-block;background:var(--primary-light);color:var(--primary-dark);font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.chapter-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
+.chapter-card p{font-size:13px;color:var(--text-light);margin-bottom:10px}
+.chapter-card .progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.chapter-card .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px;transition:width .3s}
+.chapter-card .progress-text{font-size:11px;color:var(--text-light);margin-top:6px;text-align:right}
+
+/* ===== 知识点 ===== */
+.kp-list{display:flex;flex-direction:column;gap:12px}
+.kp-item{background:var(--bg);border-radius:8px;padding:14px 16px;border-left:3px solid var(--primary)}
+.kp-item h4{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--primary-dark)}
+.kp-item p{font-size:13px;color:var(--text)}
+.kp-item .tag-row{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:500}
+.tag.high{background:#fee2e2;color:#dc2626}
+.tag.mid{background:#fef3c7;color:#d97706}
+.tag.low{background:#d1fae5;color:#059669}
+.tag.imaging{background:#e0e7ff;color:#4f46e5}
+
+/* ===== 错题本 ===== */
+.wrong-item{background:var(--bg);border-radius:8px;padding:16px;margin-bottom:12px;border-left:3px solid var(--danger)}
+.wrong-item .q{font-size:14px;font-weight:600;margin-bottom:8px}
+.wrong-item .opts{font-size:13px;color:var(--text-light);margin-bottom:8px}
+.wrong-item .answer{font-size:13px;color:var(--success);font-weight:600;margin-bottom:6px}
+.wrong-item .note{font-size:12px;color:var(--text-light);background:#fff;padding:8px 10px;border-radius:6px;margin-top:8px}
+.wrong-item .actions{display:flex;gap:8px;margin-top:10px}
+.btn{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;border:none;transition:all .2s;font-weight:500}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:4px 10px;font-size:12px}
+
+/* ===== 表单 ===== */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text)}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;transition:border-color .2s}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ===== 刷题 ===== */
+.quiz-card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.quiz-q{font-size:16px;font-weight:600;margin-bottom:16px;line-height:1.7}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.quiz-opt{padding:12px 16px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;font-size:14px;display:flex;align-items:center;gap:10px}
+.quiz-opt:hover{border-color:var(--primary);background:var(--primary-light)}
+.quiz-opt.selected{border-color:var(--primary);background:var(--primary-light);font-weight:600}
+.quiz-multi-opt.selected{border-color:var(--primary);background:var(--primary-light);font-weight:600}
+.quiz-multi-opt.selected .opt-letter{background:var(--primary);color:#fff}
+.fill-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.subjective-textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.quiz-type-tag{user-select:none}
+
+/* 题型筛选 */
+.type-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.type-chip{padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:2px solid var(--border);background:#fff;transition:all .2s;user-select:none}
+.type-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:600}
+.quiz-opt.correct{border-color:var(--success);background:#d1fae5}
+.quiz-opt.wrong{border-color:var(--danger);background:#fee2e2}
+.quiz-opt .opt-letter{width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.quiz-opt.selected .opt-letter{background:var(--primary);color:#fff}
+.quiz-opt.correct .opt-letter{background:var(--success);color:#fff}
+.quiz-opt.wrong .opt-letter{background:var(--danger);color:#fff}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.quiz-result{text-align:center;padding:20px}
+.quiz-result .score{font-size:48px;font-weight:700;color:var(--primary)}
+.quiz-result .score-label{font-size:14px;color:var(--text-light);margin-bottom:16px}
+
+/* ===== 打卡 ===== */
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;background:var(--bg)}
+.cal-day:hover{background:var(--primary-light)}
+.cal-day.checked{background:var(--success);color:#fff;font-weight:600}
+.cal-day.today{border:2px solid var(--primary);font-weight:700}
+.cal-day.other-month{opacity:.3}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:12px;color:var(--text-light);font-weight:600;margin-bottom:6px}
+
+/* ===== 笔记 ===== */
+.note-item{background:var(--bg);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.note-item .note-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.note-item .note-content{font-size:13px;color:var(--text-light);white-space:pre-wrap}
+.note-item .note-meta{font-size:11px;color:var(--text-light);margin-top:8px;display:flex;justify-content:space-between}
+
+/* ===== 搜索 ===== */
+.search-box{position:relative;margin-bottom:20px}
+.search-box input{width:100%;padding:12px 16px 12px 42px;border:1px solid var(--border);border-radius:10px;font-size:14px}
+.search-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text-light)}
+
+/* ===== 模态框 ===== */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:var(--radius);padding:24px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--primary-dark)}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+
+/* ===== Toast ===== */
+.toast{position:fixed;top:20px;right:20px;background:var(--primary-dark);color:#fff;padding:12px 20px;border-radius:8px;box-shadow:var(--shadow-lg);z-index:300;transform:translateX(120%);transition:transform .3s;font-size:14px}
+.toast.show{transform:translateX(0)}
+
+/* ===== 移动端 ===== */
+.menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:150;background:var(--primary);color:#fff;border:none;width:40px;height:40px;border-radius:8px;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.menu-toggle svg{width:20px;height:20px}
+.overlay-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:99}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:20px 16px;padding-top:68px}
+  .menu-toggle{display:flex}
+  .overlay-bg.show{display:block}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+
+.view{display:none}
+.view.active{display:block}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-light)}
+.empty-state svg{width:48px;height:48px;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:14px}
+
+.chip-filter{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.chip{padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:#fff;transition:all .2s}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+/* ===== 刷题滑动 ===== */
+.quiz-slider-wrap{overflow:hidden;position:relative;touch-action:pan-y}
+.quiz-slider{display:flex;transition:transform .3s ease;will-change:transform}
+.quiz-slide{min-width:100%;padding:0 4px;box-sizing:border-box}
+.quiz-slide-hint{text-align:center;font-size:12px;color:var(--text-light);margin-top:12px;opacity:.7}
+.quiz-dots{display:flex;justify-content:center;gap:6px;margin:12px 0}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s}
+.quiz-dot.active{background:var(--primary);width:24px;border-radius:4px}
+.quiz-dot.done{background:var(--success)}
+
+/* ===== 趣味游戏 ===== */
+.game-menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.game-card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;text-align:center;border:2px solid transparent}
+.game-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary-light)}
+.game-card .game-icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:#fff}
+.game-card .game-icon svg{width:28px;height:28px}
+.game-card h3{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--primary-dark)}
+.game-card p{font-size:13px;color:var(--text-light)}
+
+.game-area{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.game-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.game-header .game-title{font-size:18px;font-weight:700;color:var(--primary-dark)}
+.game-header .game-score{font-size:14px;font-weight:600;color:var(--primary)}
+.game-header .game-life{font-size:14px;color:var(--danger)}
+
+/* 知识配对游戏 */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.match-item{padding:14px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:14px;text-align:center;background:#fff;min-height:56px;display:flex;align-items:center;justify-content:center}
+.match-item:hover{border-color:var(--primary);background:var(--primary-light)}
+.match-item.selected{border-color:var(--primary);background:var(--primary-light);font-weight:600}
+.match-item.matched{border-color:var(--success);background:#d1fae5;color:#065f46;cursor:default;opacity:.8}
+.match-item.wrong{border-color:var(--danger);background:#fee2e2;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* 快速抢答游戏 */
+.trivia-q{font-size:16px;font-weight:600;margin-bottom:16px;line-height:1.7}
+.timer-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--warning),var(--danger));border-radius:4px;transition:width .1s linear}
+.trivia-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.trivia-opt{padding:14px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:14px;text-align:center}
+.trivia-opt:hover{border-color:var(--primary);background:var(--primary-light)}
+.trivia-opt.correct{border-color:var(--success);background:#d1fae5}
+.trivia-opt.wrong{border-color:var(--danger);background:#fee2e2}
+
+/* 游戏结束 */
+.game-over{text-align:center;padding:40px 20px}
+.game-over .final-score{font-size:56px;font-weight:700;color:var(--primary);margin:10px 0}
+.game-over .final-label{font-size:14px;color:var(--text-light);margin-bottom:20px}
+.game-over .stars{font-size:32px;margin-bottom:16px;letter-spacing:8px}
+
+@media(max-width:600px){
+  .trivia-opts{grid-template-columns:1fr}
+  .match-grid{gap:8px}
+  .match-item{padding:10px;font-size:13px;min-height:48px}
+  .chapter-stats{grid-template-columns:repeat(2,1fr)!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 移动端菜单按钮 -->
+  <button class="menu-toggle" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="overlay-bg" onclick="toggleSidebar()"></div>
+
+  <!-- 侧边栏 -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>生理学工作台</h1>
+      <p>医学影像学 · 大二专用</p>
+    </div>
+    <div class="nav-section">总览</div>
+    <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      学习仪表盘
+    </div>
+    <div class="nav-section">学习</div>
+    <div class="nav-item" data-view="chapters" onclick="switchView('chapters')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      章节知识库
+    </div>
+    <div class="nav-item" data-view="imaging" onclick="switchView('imaging')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      影像关联专区
+    </div>
+    <div class="nav-item" data-view="quiz" onclick="switchView('quiz')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+      在线刷题
+    </div>
+    <div class="nav-item" data-view="game" onclick="switchView('game')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg>
+      趣味游戏
+    </div>
+    <div class="nav-section">工具</div>
+    <div class="nav-item" data-view="wrong" onclick="switchView('wrong')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      错题本
+    </div>
+    <div class="nav-item" data-view="notes" onclick="switchView('notes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      我的笔记
+    </div>
+    <div class="nav-item" data-view="checkin" onclick="switchView('checkin')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      学习打卡
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main">
+    <!-- ===== 仪表盘 ===== -->
+    <div class="view active" id="view-dashboard">
+      <div class="page-header">
+        <h2>学习仪表盘</h2>
+        <span class="date" id="todayDate"></span>
+      </div>
+      <div class="grid-4" style="margin-bottom:20px">
+        <div cl
