@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>生理学学习工作台｜医学影像学大二</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"system-ui",sans-serif;}
+    body{background:#f0f4f8;color:#1e293b;padding:16px;}
+    .container{max-width:1200px;margin:0 auto;}
+    header{background:#2563eb;color:#fff;padding:20px;border-radius:12px;margin-bottom:20px;}
+    h1{font-size:22px;margin-bottom:6px;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+    .card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 2px 8px #00000014;}
+    .card h3{margin-bottom:10px;color:#2563eb;font-size:17px;}
+    .card ul{padding-left:20px;gap:6px;display:flex;flex-direction:column;}
+    .note-area{width:100%;min-height:140px;border:1px solid #cbd5e1;padding:12px;border-radius:8px;margin-top:10px;resize:vertical;}
+    .tag{display:inline-block;background:#dbeafe;color:#1d4ed8;padding:3px 8px;border-radius:4px;font-size:12px;margin:3px;}
+    footer{margin-top:30px;text-align:center;color:#64748b;font-size:13px;}
+
+    /* 刷题模块样式 */
+    .quiz-wrap{overflow:hidden;position:relative;touch-action:pan-y;}
+    .quiz-slider{display:flex;transition:transform 0.3s ease;}
+    .quiz-item{min-width:100%;padding:10px;}
+    .quiz-nav{display:flex;gap:10px;margin-top:12px;justify-content:center;}
+    .quiz-btn{padding:8px 16px;border:none;border-radius:6px;background:#2563eb;color:white;cursor:pointer;}
+    .quiz-btn:disabled{background:#94a3b8;cursor:not-allowed;}
+    .quiz-opt{margin:8px 0;padding:8px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;}
+    .quiz-opt.correct{background:#bbf7d0;border-color:#16a34a;color:#0f766e;}
+    .quiz-opt.wrong{background:#fecdd3;border-color:#dc2626;color:#991b1b;}
+    .quiz-opt.selected{background:#dbeafe;}
+    .quiz-result{margin-top:10px;padding:8px;border-radius:6px;}
+    .fill-input{width:100%;padding:8px;margin:8px 0;border:1px solid #cbd5e1;border-radius:6px;}
+    .short-ans{width:100%;min-height:100px;padding:8px;margin:8px 0;border:1px solid #cbd5e1;border-radius:6px;resize:vertical;}
+    .type-tag{display:inline-block;background:#e9d5ff;color:#7e22ce;padding:2px 6px;border-radius:4px;font-size:12px;margin-bottom:8px;}
+
+    /* 小游戏模块样式 */
+    .game-wrap{margin-top:12px;padding:12px;border:1px solid #e2e8f0;border-radius:8px;}
+    .game-title{font-weight:bold;margin-bottom:8px;}
+    .game-opt{margin:6px 0;padding:8px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;}
+    .game-score{margin:8px 0;color:#2563eb;font-weight:bold;}
+    .game-restart{padding:7px 14px;background:#16a34a;color:white;border:none;border-radius:6px;cursor:pointer;margin-top:8px;}
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📚生理学学习工作台｜医学影像学大二</h1>
+    <p>考点梳理｜错题记录｜多题型刷题（左右滑动切换）｜知识点小游戏｜记忆笔记</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📖核心章节导航</h3>
+      <ul>
+        <li>细胞的基本功能</li>
+        <li>血液</li>
+        <li>血液循环</li>
+        <li>呼吸生理</li>
+        <li>消化和吸收</li>
+        <li>能量代谢与体温</li>
+        <li>肾脏生理</li>
+        <li>神经系统</li>
+        <li>内分泌</li>
+        <li>生殖</li>
+        <li>生理学动物实验</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🎯影像专业侧重点</h3>
+      <div>
+        <span class="tag">循环生理（心血管影像基础）</span>
+        <span class="tag">呼吸生理（胸影像）</span>
+        <span class="tag">肾生理（泌尿系影像）</span>
+        <span class="tag">神经生理（中枢影像）</span>
+        <span class="tag">细胞膜电位（理解影像信号原理铺垫）</span>
+      </div>
+      <textarea class="note-area" placeholder="在这里记录生理学与影像学交叉知识点……"></textarea>
+    </div>
+
+    <div class="card">
+      <h3>✏️错题&易混淆点</h3>
+      <textarea class="note-area" placeholder="粘贴错题、写易错概念对比"></textarea>
+    </div>
+
+    <div class="card">
+      <h3>🧠背诵记忆区</h3>
+      <textarea class="note-area" placeholder="关键名词解释、简答题要点"></textarea>
+    </div>
+
+    <div class="card">
+      <h3>🔗外部学习资源</h3>
+      <ul>
+        <li>生理学教材电子版</li>
+        <li>生理动画视频链接</li>
+        <li>刷题题库链接</li>
+      </ul>
+      <textarea class="note-area" placeholder="粘贴你收藏的网页链接"></textarea>
+    </div>
+
+    <div class="card">
+      <h3>✅今日学习计划</h3>
+      <textarea class="note-area" placeholder="今日任务、完成打勾"></textarea>
+    </div>
+
+    <!-- 刷题卡片：支持左右滑动切换题目，6大题型 -->
+    <div class="card" style="grid-column:1/-1;">
+      <h3>📝多题型在线刷题（左右滑动切换题目）</h3>
+      <div class="quiz-wrap" id="quizWrap">
+        <div class="quiz-slider" id="quizSlider">
+          <!-- 题目由JS渲染 -->
+        </div>
+      </div>
+      <div class="quiz-nav">
+        <button class="quiz-btn" id="prevBtn">上一题 ←</button>
+        <button class="quiz-btn" id="nextBtn">下一题 →</button>
+      </div>
+    </div>
+
+    <!-- 知识点小游戏卡片 -->
+    <div class="card" style="grid-column:1/-1;">
+      <h3>🎮生理学知识小游戏（概念配对闯关）</h3>
+      <div class="game-wrap" id="gameBox">
+        <div class="game-title">答题闯关</div>
+        <div class="game-score" id="gameScore">得分：0</div>
+        <div id="gameContent"></div>
+        <button class="game-restart" id="gameRestart">重新开始游戏</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    本地浏览器存储，刷新不会丢失笔记；部署静态网站获得永久访问地址
+  </footer>
+</div>
+
+<script>
+// ========== 题库【6大题型，新增大量生理学实验题】==========
+const questionList = [
+  // 单选
+  {
+    type:"单选",
+    q:"静息电位主要是由哪种离子外流形成？",
+    opts:["Na⁺","K⁺","Ca²⁺","Cl⁻"],
+    ans:1,
+    exp:"静息电位：K⁺外流，外正内负。"
+  },
+  {
+    type:"单选",
+    q:"家兔动脉插管实验，插管前需要在动脉远心端结扎，近心端用止血钳夹闭，目的是？",
+    opts:["防止血管破裂","形成无血流区域方便切口","增加血压","便于分离神经"],
+    ans:1,
+    exp:"夹闭近心端、结扎远心端，使该段血管内无血流，剪开血管插管，避免大量出血。"
+  },
+  // 多选题
+  {
+    type:"多选",
+    q:"影响肾小球有效滤过压的因素有？",
+    opts:["肾小球毛细血管血压","血浆胶体渗透压","肾小囊内压","肾血流量"],
+    ans:[0,1,2],
+    exp:"有效滤过压=肾小球毛细血管血压−(血浆胶体渗透压+肾小囊内压)，肾血流量影响滤过平衡，但不属于有效滤过压组成项。"
+  },
+  {
+    type:"多选",
+    q:"家兔血压实验，可通过动脉插管实现哪些操作？",
+    opts:["记录动脉血压曲线","注射肝素抗凝","推注肾上腺素观察血压变化","采集动脉血样本"],
+    ans:[0,1,2,3],
+    exp:"动脉插管连接压力换能器记录血压；可给药、抗凝、采血。"
+  },
+  // 判断题
+  {
+    type:"判断",
+    q:"动脉插管可以用于记录动脉血压或者通过插管向动物体内注射各种药物或生理溶液。",
+    opts:["对","错"],
+    ans:0,
+    exp:"生理学动物实验中，动脉插管连接换能器记录血压，也可经插管给药。"
+  },
+  {
+    type:"判断",
+    q:"家兔性别鉴别：生殖器部位呈垂直裂隙状为母兔。",
+    opts:["对","错"],
+    ans:0,
+    exp:"母兔外阴为纵向V型裂隙，公兔为圆形凸起，挤压可见阴茎。"
+  },
+  // 填空题
+  {
+    type:"填空",
+    q:"动作电位上升支的产生机制是____离子快速内流。",
+    answer:"Na⁺",
+    exp:"去极化由钠离子（Na⁺）快速内流形成。"
+  },
+  {
+    type:"填空",
+    q:"家兔动脉插管实验中，插管前向管内充满____，防止血液凝固堵塞管道。",
+    answer:"肝素生理盐水",
+    exp:"肝素具有抗凝作用，预先充满插管，防止凝血堵管。"
+  },
+  // 名词解释
+  {
+    type:"名词解释",
+    q:"静息电位",
+    refAns:"安静状态下细胞膜两侧存在的外正内负的电位差，主要由K⁺外流形成。",
+    exp:"核心要点：安静、外正内负、钾离子外流。"
+  },
+  {
+    type:"名词解释",
+    q:"有效滤过压",
+    refAns:"肾小球促进滤过的压力减去阻碍滤过压力的差值，是肾小球滤过的动力。",
+    exp:"公式：有效滤过压=肾小球毛细血管血压−(血浆胶体渗透压+肾小囊内压)"
+  },
+  // 简答题
+  {
+    type:"简答",
+    q:"简述心肌有效不应期长的生理意义。",
+    refAns:"心肌有效不应期长，覆盖心肌收缩期，使心肌不会发生完全强直收缩，保证心脏交替收缩舒张，实现泵血功能。",
+    exp:"关键词：不产生强直收缩、保障泵血。"
+  },
+  {
+    type:"简答",
+    q:"简述家兔动脉插管实验的目的。",
+    refAns:"记录家兔动脉血压，观察神经、体液因素对动脉血压的调节作用。",
+    exp:"核心：记录血压，观察血压调节。"
+  },
+  // 案例分析题
+  {
+    type:"案例分析",
+    q:"患者大量失血，动脉血压下降。请分析机体通过什么调节机制回升血压？",
+    refAns:"主要依靠颈动脉窦-主动脉弓压力感受性反射。血压降低→压力感受器传入冲动减少→交感神经兴奋、迷走抑制→心率加快、外周血管收缩、心收缩力增强，血压回升。属于负反馈调节。",
+    exp:"考点：减压反射（压力感受性反射）负反馈调节。"
+  },
+  {
+    type:"案例分析",
+    q:"在家兔血压实验，经动脉推注肾上腺素，血压出现先升高后下降的变化，请解释该现象。",
+    refAns:"肾上腺素激动α与β受体。α受体收缩血管，β1增强心肌收缩力，使血压上升；β2舒张骨骼肌血管，后期降压。综合表现为先升后降。",
+    exp:"考点：肾上腺素对心血管受体的双重激动效应。"
+  }
+];
+
+// ========== 滑动刷题逻辑 ==========
+let currentQ = 0;
+const slider = document.getElementById('quizSlider');
+const quizWrap = document.getElementById('quizWrap');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+// 渲染题目，区分全部题型
+function renderQuiz(){
+  slider.innerHTML = '';
+  questionList.forEach((item,idx)=>{
+    const div = document.createElement('div');
+    div.className = 'quiz-item';
+    let html = `<span class="type-tag">${item.type}</span><div><strong>第${idx+1}题：</strong>${item.q}</div>`;
+    // 单选
+    if(item.type === "单选"){
+      html += `<div class="opts-wrap">${item.opts.map((opt,i)=>`<div class="quiz-opt" data-idx="${i}">${opt}</div>`).join('')}</div>`;
+    }
+    // 多选
+    else if(item.type === "多选"){
+      html += `<div class="opts-wrap">${item.opts.map((opt,i)=>`<div class="quiz-opt" data-idx="${i}">☐ ${opt}</div>`).join('')}</div>`;
+    }
+    // 判断
+    else if(item.type === "判断"){
+      html += `<div class="opts-wrap">${item.opts.map((opt,i)=>`<div class="quiz-opt" data-idx="${i}">${opt}</div>`).join('')}</div>`;
+    }
+    // 填空
+    else if(item.type === "填空"){
+      html += `<input class="fill-input" placeholder="在这里填写答案">`;
+    }
+    // 名词解释 / 简答 / 案例分析
+    else if(["名词解释","简答","案例分析"].includes(item.type)){
+      html += `<textarea class="short-ans" placeholder="写下你的答案"></textarea>`;
+    }
+    html += `<div class="quiz-result" style="display:none;"></div>`;
+    div.innerHTML = html;
+    slider.appendChild(div);
+  })
+  updateSliderPos();
+  bindQuizClick();
+}
+
+function updateSliderPos(){
+  slider.style.transform = `translateX(-${currentQ * 100}%)`;
+  prevBtn.disabled = currentQ === 0;
+  nextBtn.disabled = currentQ === questionList.length - 1;
+}
+
+// 题型点击事件
+function bindQuizClick(){
+  const items = document.querySelectorAll('.quiz-item');
+  items.forEach((itemDiv,idx)=>{
+    const question = questionList[idx];
+    const resEl = itemDiv.querySelector('.quiz-result');
+    // 单选 判断
+    if(["单选","判断"].includes(question.type)){
+      const opts = itemDiv.querySelectorAll('.quiz-opt');
+      opts.forEach(optEl=>{
+        optEl.onclick = function(){
+          const selIdx = Number(this.dataset.idx);
+          resEl.style.display='block';
+          if(selIdx === question.ans){
+            this.classList.add('correct');
+            resEl.innerHTML = `<span style="color:#16a34a">✅正确：${question.exp}</span>`;
+          }else{
+            this.classList.add('wrong');
+            resEl.innerHTML = `<span style="color:#dc2626">❌错误，参考答案：${question.opts[question.ans]}。解析：${question.exp}</span>`;
+          }
+          opts.forEach(o=>o.style.pointerEvents='none');
+        }
+      })
+    }
+    // 多选题
+    else if(question.type === "多选"){
+      const opts = itemDiv.querySelectorAll('.quiz-opt');
+      opts.forEach(optEl=>{
+        optEl.onclick = function(){
+          this.classList.toggle('selected');
+        }
+      })
+      // 增加查看答案按钮
+      const checkBtn = document.createElement('button');
+      checkBtn.className = "quiz-btn";
+      checkBtn.style.marginTop="8px";
+      checkBtn.innerText="核对答案";
+      checkBtn.onclick = ()=>{
+        resEl.style.display='block';
+        let selected = [];
+        opts.forEach((o,i)=>{
+          if(o.classList.contains('selected')) selected.push(i);
+          if(question.ans.includes(i)) o.classList.add('correct');
+          else if(o.classList.contains('selected')) o.classList.add('wrong');
+        })
+        resEl.innerHTML = `<span style="color:#1d4ed8">参考答案：${question.ans.map(i=>question.opts[i])}。解析：${question.exp}</span>`;
+        opts.forEach(o=>o.style.pointerEvents='none');
+        checkBtn.disabled=true;
+      }
+      itemDiv.appendChild(checkBtn);
+    }
+    // 填空、名词解释、简答、案例
+    else if(["填空","名词解释","简答","案例分析"].includes(question.type)){
+      const checkBtn = document.createElement('button');
+      checkBtn.className = "quiz-btn";
+      checkBtn.style.marginTop="8px";
+      checkBtn.innerText="查看参考答案&解析";
+      checkBtn.onclick = ()=>{
+        resEl.style.display='block';
+        resEl.innerHTML = `<span style="color:#1d4ed8">参考答案：${question.answer||question.refAns}<br>解析：${question.exp}</span>`;
+        checkBtn.disabled=true;
+      }
+      itemDiv.appendChild(checkBtn);
+    }
+  })
+}
+
+prevBtn.onclick = ()=>{
+  if(currentQ>0){currentQ--;updateSliderPos();}
+}
+nextBtn.onclick = ()=>{
+  if(currentQ < questionList.length-1){currentQ++;updateSliderPos();}
+}
+
+// ========== 触摸左右滑动逻辑（手机iPad）==========
+let startX=0, moveX=0;
+quizWrap.addEventListener('touchstart',e=>{startX = e.touches[0].clientX;})
+quizWrap.addEventListener('touchmove',e=>{moveX = e.touches[0].clientX;})
+quizWrap.addEventListener('touchend',()=>{
+  const diff = moveX - startX;
+  if(Math.abs(diff)>60){
+    if(diff>0 && currentQ>0){currentQ--;updateSliderPos();}
+    if(diff<0 && currentQ<questionList.length-1){currentQ++;updateSliderPos();}
+  }
+})
+
+// ========== 知识点小游戏：概念闯关 ==========
+const gameData = [
+  {q:"哪个离子形成静息电位？",opts:["K⁺","Na⁺","Ca²⁺"],ans:0},
+  {q:"动作电位上升支是什么离子内流？",opts:["K⁺","Na⁺","Cl⁻"],ans:1},
+  {q:"心肌不会强直收缩原因？",opts:["有效不应期长","自律性高","传导快","收缩力强"],ans:0},
+  {q:"肺通气直接动力？",opts:["呼吸肌","肺内压与大气压差","胸膜腔负压"],ans:1},
+  {q:"肾小球滤过动力？",opts:["毛细血管血压","血浆胶体渗透压","囊内压"],ans:0},
+  {q:"家兔母兔生殖器是什么形态？",opts:["纵向裂隙","圆形凸起","小圆孔","球形"],ans:0}
+];
+let gameScore = 0;
+let gameIndex = 0;
+const gameContent = document.getElementById('gameContent');
+const gameScoreDom = document.getElementById('gameScore');
+const gameRestartBtn = document.getElementById('gameRestart');
+
+function renderGame(){
+  gameScoreDom.innerText = `得分：${gameScore}`;
+  if(gameIndex >= gameData.length){
+    gameContent.innerHTML = `<div>🎉游戏结束！总分：${gameScore} / ${gameData.length}</div>`;
+    return;
+  }
+  const g = gameData[gameIndex];
+  let html = `<div>题目${gameIndex+1}：${g.q}</div>`;
+  g.opts.forEach((opt,i)=>{
+    html += `<div class="game-opt" data-gidx="${i}">${opt}</div>`;
+  })
+  gameContent.innerHTML = html;
+  document.querySelectorAll('.game-opt').forEach(el=>{
+    el.onclick = function(){
+      const sel = Number(this.dataset.gidx);
+      if(sel === g.ans){
+        gameScore++;
+        this.style.background="#bbf7d0";
+      }else{
+        this.style.background="#fecdd3";
+      }
+      gameContent.querySelectorAll('.game-opt').forEach(o=>o.style.pointerEvents='none');
+      setTimeout(()=>{
+        gameIndex++;
+        renderGame();
+      },600);
+    }
+  })
+}
+
+gameRestartBtn.onclick = ()=>{
+  gameScore = 0;
+  gameIndex = 0;
+  renderGame();
+}
+
+// ========== 本地存储笔记 ==========
+const textareas = document.querySelectorAll('.note-area');
+textareas.forEach((ta,idx)=>{
+  const key = `physio‑note‑${idx}`;
+  ta.value = localStorage.getItem(key)||'';
+  ta.addEventListener('input',()=>localStorage.setItem(key,ta.value));
+})
+
+// 初始化页面
+renderQuiz();
+renderGame();
+</script>
+</body>
+</html>
